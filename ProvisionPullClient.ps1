@@ -24,7 +24,7 @@ Param (
 
     # Parameter that defines the Pull server the client will use
     [Parameter(Mandatory=$True)]
-    [strong]$PullServerURL
+    [string]$PullServerURL
 )
 
 # Temp folder used for outputting the MOF files so they are in a known location
