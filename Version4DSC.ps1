@@ -10,7 +10,7 @@ Param (
     [string]$PullServerURL
 )
 
-Set-Location "$PSScriptRoot\DSC"
+Set-Location "$PSScriptRoot"
 
 Configuration SimpleMetaConfigurationForPull 
 { 
