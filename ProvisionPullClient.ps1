@@ -1,15 +1,4 @@
-﻿[cmdletbinding()]
-Param (
-    # Parameter that defines the configuration ID to be used by the client
-    [Parameter(Mandatory=$True)]
-    [string]$ConfigurationIDGUID,
-
-    # Parameter that defines the Pull server the client will use
-    [Parameter(Mandatory=$True)]
-    [string]$PullServerURL
-)
-
-<#
+﻿<#
 .SYNOPSIS
     Configures a machine to be a pull client in a DSC environment
 
@@ -27,6 +16,17 @@ Param (
 
     ProvisionPullClient.ps1 e7d38156-02b2-42d3-ad0a-4457fe8cf380 https://pullserver.example.com:8080/PSDSCPullServer.svc
 #>
+
+[cmdletbinding()]
+Param (
+    # Parameter that defines the configuration ID to be used by the client
+    [Parameter(Mandatory=$True)]
+    [string]$ConfigurationIDGUID,
+
+    # Parameter that defines the Pull server the client will use
+    [Parameter(Mandatory=$True)]
+    [string]$PullServerURL
+)
 
 
 # Temp folder used for outputting the MOF files so they are in a known location
