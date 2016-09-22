@@ -44,11 +44,11 @@ Switch ($PSVersionTable.PSVersion.Major)
 {
     5 {
          Invoke-WebRequest https://raw.githubusercontent.com/justeat/PowerShellDSCUtils/master/Version5DSC.ps1 -OutFile "$PSScriptRoot\DSC\Version5DSC.ps1"
-        . $PSScriptRoot\Version5DSC.ps1 -ConfigurationIDGUID $ConfigurationIDGUID -PullServerUrl $PullServerURL
+        . $PSScriptRoot\DSC\Version5DSC.ps1 -ConfigurationIDGUID $ConfigurationIDGUID -PullServerUrl $PullServerURL
     }
     4 {
         Invoke-WebRequest https://raw.githubusercontent.com/justeat/PowerShellDSCUtils/master/Version4DSC.ps1 -OutFile "$PSScriptRoot\DSC\Version4DSC.ps1"
-        . $PSScriptRoot\Version4DSC.ps1 -ConfigurationIDGUID $ConfigurationIDGUID -PullServerUrl $PullServerURL
+        . $PSScriptRoot\DSC\Version4DSC.ps1 -ConfigurationIDGUID $ConfigurationIDGUID -PullServerUrl $PullServerURL
     }
     # Graceful exit if PS Version doesnt mach above
     default { exit }
