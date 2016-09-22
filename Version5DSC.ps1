@@ -10,7 +10,7 @@ Param (
     [string]$PullServerURL
 )
 
-Set-Location "$PSScriptRoot\DSC"
+Set-Location "$PSScriptRoot"
 
 [DSCLocalConfigurationManager()]
     
@@ -34,4 +34,4 @@ Set-Location "$PSScriptRoot\DSC"
     }
     PullClientConfigID
 
-    Set-DscLocalConfigurationManager -Path ".\."
+    Set-DscLocalConfigurationManager -Path ".\PullClientConfigID"
