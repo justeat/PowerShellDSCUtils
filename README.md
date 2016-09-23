@@ -9,7 +9,7 @@ ConfigurationIDGUID
 ```
 Both of these are mandatory. The purpose of them is to tell the client the location of the pull server, and to tell the client what configuration it should be using.
 
-The Pull client is basically a wrapper script that detects the version of PowerShell you are running, then it goes and calls the relevant script based on said version. Both version 4 and 5 have the same end goal, but implementation between the two versions is slightly different. 
+The Provision Pull Client script is basically a wrapper script that detects the version of PowerShell you are running, then it goes and calls the relevant script based on said version. Both version 4 and 5 have the same end goal, but implementation between the two versions is slightly different. 
 
 An example of running the script would be as so:
 
