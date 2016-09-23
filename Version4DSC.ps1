@@ -26,6 +26,6 @@ Configuration SimpleMetaConfigurationForPull
         DownloadManagerCustomData = @{ServerUrl = "$PullServerURL"; AllowUnsecureConnection = “FALSE”}
     } 
 } 
-SimpleMetaConfigurationForPull -Output ".\."
+SimpleMetaConfigurationForPull -Output "."
 
-Set-DscLocalConfigurationManager -Path ".\."
+Set-DSCLocalConfigurationManager –ComputerName localhost –Path . –Verbose.
