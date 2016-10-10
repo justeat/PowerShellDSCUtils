@@ -28,4 +28,4 @@ Configuration SimpleMetaConfigurationForPull
 } 
 SimpleMetaConfigurationForPull -Output "."
 
-Set-DSCLocalConfigurationManager –ComputerName localhost –Path . –Verbose.
+Set-DSCLocalConfigurationManager –ComputerName localhost –Path . –Verbose
