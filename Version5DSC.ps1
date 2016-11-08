@@ -25,6 +25,7 @@ Set-Location "$PSScriptRoot"
                 RefreshFrequencyMins = 30 
                 RebootNodeIfNeeded = $true
                 ConfigurationMode = "ApplyAndAutoCorrect"
+                AllowModuleOverwrite = $true
             }
             ConfigurationRepositoryWeb PullSrv
             {

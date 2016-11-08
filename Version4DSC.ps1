@@ -23,6 +23,7 @@ Configuration SimpleMetaConfigurationForPull
         RefreshFrequencyMins = 30;
         ConfigurationModeFrequencyMins = 30; 
         ConfigurationMode = "ApplyAndAutoCorrect";
+        AllowModuleOverwrite = $true
         DownloadManagerCustomData = @{ServerUrl = "$PullServerURL"; AllowUnsecureConnection = “FALSE”}
     } 
 } 
