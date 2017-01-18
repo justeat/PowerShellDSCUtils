@@ -25,7 +25,9 @@ Param (
 
     # Parameter that defines the Pull server the client will use
     [Parameter(Mandatory=$True)]
-    [string]$PullServerURL
+    [string]$PullServerURL,
+    [Parameter(Mandatory=$True)]
+    [string]$CertThumb
 )
 
 
@@ -43,12 +45,12 @@ If (!(Test-Path "$PSScriptRoot\DSC"))
 Switch ($PSVersionTable.PSVersion.Major)
 {
     5 {
-         Invoke-WebRequest https://raw.githubusercontent.com/justeat/PowerShellDSCUtils/Ongoing/Version5DSC-SS.ps1 -OutFile "$PSScriptRoot\DSC\Version5DSC.ps1"
-        . $PSScriptRoot\DSC\Version5DSC-SS.ps1 -ConfigurationIDGUID $ConfigurationIDGUID -PullServerUrl $PullServerURL
+         Invoke-WebRequest https://raw.githubusercontent.com/justeat/PowerShellDSCUtils/Ongoing/Version5DSC-SS.ps1 -OutFile "$PSScriptRoot\DSC\Version5DSC-SS.ps1"
+        . $PSScriptRoot\DSC\Version5DSC-SS.ps1 -ConfigurationIDGUID $ConfigurationIDGUID -PullServerUrl $PullServerURL -CertThumb $CertThumb
     }
     4 {
-        Invoke-WebRequest https://raw.githubusercontent.com/justeat/PowerShellDSCUtils/Ongoing/Version4DSC-SS.ps1 -OutFile "$PSScriptRoot\DSC\Version4DSC.ps1"
-        . $PSScriptRoot\DSC\Version4DSC-SS.ps1 -ConfigurationIDGUID $ConfigurationIDGUID -PullServerUrl $PullServerURL
+        Invoke-WebRequest https://raw.githubusercontent.com/justeat/PowerShellDSCUtils/Ongoing/Version4DSC-SS.ps1 -OutFile "$PSScriptRoot\DSC\Version4DSC-SS.ps1"
+        . $PSScriptRoot\DSC\Version4DSC-SS.ps1 -ConfigurationIDGUID $ConfigurationIDGUID -PullServerUrl $PullServerURL -CertThumb $CertThumb
     }
     # Graceful exit if PS Version doesnt mach above
     default { exit }
