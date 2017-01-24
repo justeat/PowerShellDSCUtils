@@ -13,7 +13,7 @@ Set-Location "$PSScriptRoot"
 
 Write-Verbose 'Constructing SetupLCM DSC Configuration object...'
 
-    [DSCLocalConfigurationManager()]    Configuration SetupLCM    {        Settings        {            AllowModuleOverwrite  = $True            CertificateID = "$ThumbPrint"            ConfigurationID = $ConfigurationIDGUID            ConfigurationMode = 'ApplyAndAutoCorrect'            RebootNodeIfNeeded = $True            RefreshFrequencyMins = 15            RefreshMode = 'PULL'        } # Settings        ConfigurationRepositoryWeb PullServerDetails        {            CertificateID = "$ThumbPrint"            ServerUrl = "$PullServerURL"        } # PullServerDetails    } # Configuration SetupLCM
+    [DSCLocalConfigurationManager()]    Configuration SetupLCM    {        Settings        {            AllowModuleOverwrite           = $True            CertificateID                  = "$ThumbPrint"            ConfigurationID                = $ConfigurationIDGUID            ConfigurationMode              = 'ApplyAndAutoCorrect'            ConfigurationModeFrequencyMins = 30            RebootNodeIfNeeded             = $True            RefreshFrequencyMins           = 30            RefreshMode                    = 'PULL'        } # Settings        ConfigurationRepositoryWeb PullServerDetails        {            CertificateID = "$ThumbPrint"            ServerUrl     = "$PullServerURL"        } # PullServerDetails    } # Configuration SetupLCM
 
 Write-Verbose 'DONE!'
 Write-Verbose ''
