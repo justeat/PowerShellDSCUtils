@@ -2,44 +2,18 @@
 Param 
 (
     [Parameter(Mandatory=$True)]
-    [Array]$ConfigurationNames,
+    [string]$ConfigurationIDGUID,
     [Parameter(Mandatory=$True)]
-    [string]$PullServerRegKey,
+    [string]$PullServerURL,
     [Parameter(Mandatory=$True)]
-    [string]$PullServerURL
+    [string]$ThumbPrint
 ) # Params
 
-Set-Location -Path $PSScriptRoot
+Set-Location "$PSScriptRoot"
 
 Write-Verbose 'Constructing SetupLCM DSC Configuration object...'
 
-    [DscLocalConfigurationManager()]
-    Configuration SetupLCM 
-    {
-        Settings 
-        {
-            ActionAfterReboot              = 'ContinueConfiguration'
-            AllowModuleOverwrite           = $True
-            ConfigurationMode              = 'ApplyAndAutoCorrect'
-            ConfigurationModeFrequencyMins = 30
-            RebootNodeIfNeeded             = $True
-            RefreshFrequencyMins           = 30 
-            RefreshMode                    = 'PULL'
-        } # Settings
-
-        ConfigurationRepositoryWeb AzureAutomationDSCPullServer
-        {
-            ConfigurationNames = $ConfigurationNames
-            RegistrationKey    = $PullServerRegKey
-            ServerUrl          = $PullServerURL 
-        } # AzureAutomationDSCPullServer
-
-        ResourceRepositoryWeb AzureAutomationDSCReportServer
-        {
-            RegistrationKey = $PullServerRegKey
-            ServerUrl       = $PullServerURL
-        } # AzureAutomationDSCReportServer
-    } # Configuration SetupLCM
+    [DSCLocalConfigurationManager()]    Configuration SetupLCM    {        Settings        {            AllowModuleOverwrite           = $True            CertificateID                  = "$ThumbPrint"            ConfigurationID                = $ConfigurationIDGUID            ConfigurationMode              = 'ApplyAndAutoCorrect'            ConfigurationModeFrequencyMins = 30            RebootNodeIfNeeded             = $True            RefreshFrequencyMins           = 30            RefreshMode                    = 'PULL'        } # Settings        ConfigurationRepositoryWeb PullServerDetails        {            CertificateID = "$ThumbPrint"            ServerUrl     = "$PullServerURL"        } # PullServerDetails    } # Configuration SetupLCM
 
 Write-Verbose 'DONE!'
 Write-Verbose ''
