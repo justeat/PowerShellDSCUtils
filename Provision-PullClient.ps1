@@ -20,14 +20,14 @@
 [cmdletbinding()]
 Param 
 (
-    [string]$ConfigurationIDGUID,
+    [String]$ConfigurationIDGUID,
     [Parameter(Mandatory=$True)]
-    [Array]$ConfigurationNames,
+    [String]$ConfigurationNames,
     [Parameter(Mandatory=$True)]
-    [string]$PullServerURL,
+    [String]$PullServerURL,
     [Parameter(Mandatory=$True)]
-    [string]$PullServerRegKey,
-    [string]$ThumbPrint
+    [String]$PullServerRegKey,
+    [String]$ThumbPrint
 )
 
 
@@ -46,6 +46,8 @@ Switch ($PSVersionTable.PSVersion.Major)
 {
     5 
     {
+        $ConfigurationNames = ($ConfigurationNames.Split(',')).Trim()
+
          Invoke-WebRequest https://raw.githubusercontent.com/justeat/PowerShellDSCUtils/master/Version5DSC.ps1 -OutFile "$PSScriptRoot\DSC\Version5DSC.ps1"
         . $PSScriptRoot\DSC\Version5DSC.ps1 -ConfigurationNames $ConfigurationNames -PullServerUrl $PullServerURL -PullServerRegKey $PullServerRegKey
     } # PoSh 5
