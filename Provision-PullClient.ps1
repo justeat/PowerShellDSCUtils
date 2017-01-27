@@ -20,7 +20,6 @@
 [cmdletbinding()]
 Param 
 (
-    [Parameter(Mandatory=$True)]
     [string]$ConfigurationIDGUID,
     [Parameter(Mandatory=$True)]
     [Array]$ConfigurationNames,
@@ -28,7 +27,6 @@ Param
     [string]$PullServerURL,
     [Parameter(Mandatory=$True)]
     [string]$PullServerRegKey,
-    [Parameter(Mandatory=$True)]
     [string]$ThumbPrint
 )
 
