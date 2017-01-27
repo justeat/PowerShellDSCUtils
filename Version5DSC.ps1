@@ -2,16 +2,31 @@
 Param 
 (
     [Parameter(Mandatory=$True)]
-    [Array]$ConfigurationNames,
+    [String]$ConfigurationNames,
     [Parameter(Mandatory=$True)]
-    [string]$PullServerRegKey,
+    [String]$PullServerRegKey,
     [Parameter(Mandatory=$True)]
-    [string]$PullServerURL
+    [String]$PullServerURL
 ) # Params
 
 Set-Location -Path $PSScriptRoot
 
 Write-Verbose 'Constructing SetupLCM DSC Configuration object...'
+
+    $ConfigurationNames = $($ConfigurationNames.Split(',')).Trim()
+
+    $Helper = '@('
+
+        foreach ($ConfigurationName in $ConfigurationNames)
+        {
+            $Helper += "'$ConfigurationName',"
+        } # foreach
+
+    $Helper += ')'
+    
+    $ConfigurationNames = $null
+    $ConfigurationNames = $Helper.Replace(',)',')')
+    $ConfigurationNames | Out-File -FilePath C:\DSC\helper.txt
 
     [DscLocalConfigurationManager()]
     Configuration SetupLCM 
