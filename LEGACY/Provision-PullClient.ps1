@@ -18,25 +18,23 @@
 #>
 
 [cmdletbinding()]
-Param 
-(
+Param (
+    # Parameter that defines the configuration ID to be used by the client
     [Parameter(Mandatory=$True)]
     [string]$ConfigurationIDGUID,
-    [Parameter(Mandatory=$True)]
-    [Array]$ConfigurationNames,
+
+    # Parameter that defines the Pull server the client will use
     [Parameter(Mandatory=$True)]
     [string]$PullServerURL,
-    [Parameter(Mandatory=$True)]
-    [string]$PullServerRegKey,
     [Parameter(Mandatory=$True)]
     [string]$ThumbPrint
 )
 
 
 # Temp folder used for outputting the MOF files so they are in a known location
-If (!(Test-Path -Path "$PSScriptRoot\DSC"))
+If (!(Test-Path "$PSScriptRoot\DSC"))
 {
-    New-Item -Path "$PSScriptRoot\DSC" -ItemType Directory
+    New-Item "$PSScriptRoot\DSC" -ItemType Directory
 }
 
 # Use switch to configure the pull client dependant on version of PS installed
@@ -46,21 +44,14 @@ If (!(Test-Path -Path "$PSScriptRoot\DSC"))
 
 Switch ($PSVersionTable.PSVersion.Major)
 {
-    5 
-    {
+    5 {
          Invoke-WebRequest https://raw.githubusercontent.com/justeat/PowerShellDSCUtils/master/Version5DSC.ps1 -OutFile "$PSScriptRoot\DSC\Version5DSC.ps1"
-        . $PSScriptRoot\DSC\Version5DSC.ps1 -ConfigurationNames $ConfigurationNames -PullServerUrl $PullServerURL -PullServerRegKey $PullServerRegKey
-    } # PoSh 5
-
-    4 
-    {
+        . $PSScriptRoot\DSC\Version5DSC.ps1 -ConfigurationIDGUID $ConfigurationIDGUID -PullServerUrl $PullServerURL -ThumbPrint $ThumbPrint
+    }
+    4 {
         Invoke-WebRequest https://raw.githubusercontent.com/justeat/PowerShellDSCUtils/master/Version4DSC.ps1 -OutFile "$PSScriptRoot\DSC\Version4DSC.ps1"
         . $PSScriptRoot\DSC\Version4DSC.ps1 -ConfigurationIDGUID $ConfigurationIDGUID -PullServerUrl $PullServerURL -ThumbPrint $ThumbPrint
-    } # PoSh 4
-
+    }
     # Graceful exit if PS Version doesnt mach above
-    default 
-    { 
-        exit 
-    } # default
+    default { exit }
 }

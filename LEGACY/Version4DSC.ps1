@@ -2,43 +2,28 @@
 Param 
 (
     [Parameter(Mandatory=$True)]
-    [Array]$ConfigurationNames,
+    [string]$ConfigurationIDGUID,
     [Parameter(Mandatory=$True)]
-    [string]$PullServerRegKey,
+    [string]$PullServerURL,
     [Parameter(Mandatory=$True)]
-    [string]$PullServerURL
+    [string]$ThumbPrint
 ) # Params
 
-Set-Location -Path $PSScriptRoot
+Set-Location "$PSScriptRoot"
 
 Write-Verbose 'Constructing SetupLCM DSC Configuration object...'
 
-    [DscLocalConfigurationManager()]
-    Configuration SetupLCM 
+    Configuration SetupLCM
     {
-        Settings 
-        {
-            ActionAfterReboot              = 'ContinueConfiguration'
-            AllowModuleOverwrite           = $True
+        LocalConfigurationManager {              AllowModuleOverwrite           = $True
+            CertificateID                  = "$ThumbPrint"
+            ConfigurationID                = "$ConfigurationIDGUID"
             ConfigurationMode              = 'ApplyAndAutoCorrect'
             ConfigurationModeFrequencyMins = 30
-            RebootNodeIfNeeded             = $True
-            RefreshFrequencyMins           = 30 
-            RefreshMode                    = 'PULL'
-        } # Settings
-
-        ConfigurationRepositoryWeb AzureAutomationDSCPullServer
-        {
-            ConfigurationNames = $ConfigurationNames
-            RegistrationKey    = $PullServerRegKey
-            ServerUrl          = $PullServerURL 
-        } # AzureAutomationDSCPullServer
-
-        ResourceRepositoryWeb AzureAutomationDSCReportServer
-        {
-            RegistrationKey = $PullServerRegKey
-            ServerUrl       = $PullServerURL
-        } # AzureAutomationDSCReportServer
+            DownloadManagerCustomData      = @{
+                                                ServerUrl = "$PullServerURL"
+                                              }
+            DownloadManagerName            = 'WebDownloadManager'            RefreshFrequencyMins           = 30            RefreshMode                    = 'PULL'                 RebootNodeIfNeeded             = $True        } # LCM
     } # Configuration SetupLCM
 
 Write-Verbose 'DONE!'
