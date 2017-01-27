@@ -23,7 +23,7 @@ Write-Verbose 'Constructing SetupLCM DSC Configuration object...'
             ActionAfterReboot              = 'ContinueConfiguration'
             AllowModuleOverwrite           = $True
             ConfigurationMode              = 'ApplyAndAutoCorrect'
-            ConfigurationModeFrequencyMins = 30
+            ConfigurationModeFrequencyMins = 15
             RebootNodeIfNeeded             = $True
             RefreshFrequencyMins           = 30 
             RefreshMode                    = 'PULL'
@@ -36,11 +36,18 @@ Write-Verbose 'Constructing SetupLCM DSC Configuration object...'
             ServerUrl          = $PullServerURL 
         } # AzureAutomationDSCPullServer
 
-        ResourceRepositoryWeb AzureAutomationDSCReportServer
+        ResourceRepositoryWeb AzureAutomationDSCRepository
         {
             RegistrationKey = $PullServerRegKey
             ServerUrl       = $PullServerURL
         } # AzureAutomationDSCReportServer
+
+        ReportServerWeb AzureAutomationDSCReportServer
+        {
+            RegistrationKey = $PullServerRegKey
+            ServerUrl       = $PullServerURL
+             
+        }
     } # Configuration SetupLCM
 
 Write-Verbose 'DONE!'
@@ -84,3 +91,6 @@ Write-Verbose 'Applying SetupLCM DSC Configuration to self...'
     } # if
 
 Write-Verbose 'DONE!'
+
+# The below is to give some breathing space for config to be properly pulled down from Automation DSC
+Start-Sleep -Seconds 30
