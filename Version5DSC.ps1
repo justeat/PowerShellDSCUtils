@@ -14,7 +14,7 @@ Set-Location -Path $PSScriptRoot
 Write-Verbose 'Constructing SetupLCM DSC Configuration object...'
 
     $ConfigurationNames = $($ConfigurationNames.Split(',')).Trim()
-
+    <#
     $Helper = '@('
 
         foreach ($ConfigurationName in $ConfigurationNames)
@@ -27,7 +27,7 @@ Write-Verbose 'Constructing SetupLCM DSC Configuration object...'
     $ConfigurationNames = $null
     $ConfigurationNames = $Helper.Replace(',)',')')
     $ConfigurationNames | Out-File -FilePath C:\DSC\helper.txt
-
+    #>
     [DscLocalConfigurationManager()]
     Configuration SetupLCM 
     {
