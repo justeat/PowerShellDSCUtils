@@ -25,7 +25,7 @@ Write-Verbose 'Constructing SetupLCM DSC Configuration object...'
                 ActionAfterReboot              = 'ContinueConfiguration'
                 AllowModuleOverwrite           = $True
                 ConfigurationMode              = 'ApplyAndAutoCorrect'
-                ConfigurationModeFrequencyMins = 15
+                ConfigurationModeFrequencyMins = 30
                 RebootNodeIfNeeded             = $True
                 RefreshFrequencyMins           = 30 
                 RefreshMode                    = 'PULL'
@@ -142,7 +142,7 @@ Write-Verbose ''
 Write-Verbose 'DONE!'
 Write-Verbose ''
 Write-Verbose 'Re-registering with DSC to ensure proper workflow from now on...'
-
+<#
     if (Test-Path -Path 'C:\Windows\System32\Configuration\DSCEngineCache.mof')
     {
         Write-Verbose ''
@@ -164,7 +164,7 @@ Write-Verbose 'Re-registering with DSC to ensure proper workflow from now on...'
         Write-Verbose "`tDONE!"
         Write-Verbose ''
     } # if
-
+    #>
     try
     {
         Set-DSCLocalConfigurationManager –Path .\SetupLCM -Force –Verbose -ErrorAction Stop
