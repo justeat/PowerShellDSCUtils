@@ -79,6 +79,8 @@ Write-Verbose 'Applying SetupLCM DSC Configuration to self...'
 
     if ($PSCmdlet.ShouldProcess('SetupLCM DSC Configuration', 'Applying'))
     {
+        $CurrentTime = Get-Date
+        
         try
         {
             Set-DSCLocalConfigurationManager –Path .\SetupLCM –Verbose -ErrorAction Stop
@@ -94,6 +96,57 @@ Write-Verbose 'Applying SetupLCM DSC Configuration to self...'
     } # if
 
 Write-Verbose 'DONE!'
+Write-Verbose ''
+Write-Verbose 'Waiting for the initial DSC registration to complete...'
+
+    do
+    {
+        Start-Sleep -Seconds 1
+    } # do
+
+    while
+    (
+        [bool]!(Get-EventLog -LogName 'Microsoft-Windows-DSC/Operational' -InstanceId 4270 -Newest 1 -After $CurrentTime)
+    ) # while
+
+Write-Verbose 'DONE!'
+Write-Verbose ''
+Write-Verbose 'Re-registering with DSC to ensure proper workflow from now on...'
+
+    if (Test-Path -Path 'C:\Windows\System32\Configuration\DSCEngineCache.mof')
+    {
+        Write-Verbose ''
+        Write-Verbose "`tCached DSC Engine MOF found, going to remove it..."
+        
+            try
+            {
+                Remove-Item -Path 'C:\Windows\System32\Configuration\DSCEngineCache.mof' -Force -ErrorAction Stop
+            } # try
+
+            catch
+            {
+                Write-Host -ForegroundColor Red "`tFailed to remove cached DSC Engine MOF!"
+                Write-Host -ForegroundColor Red "`tError details: $($Error[0].Exception)"
+                Write-Host -ForegroundColor Red "`tABORTING!"
+                break
+            } # catch
+
+        Write-Verbose "`tDONE!"
+        Write-Verbose ''
+    } # if
+
+    try
+    {
+        Set-DSCLocalConfigurationManager –Path .\SetupLCM -Force –Verbose -ErrorAction Stop
+    } # try
+
+    catch
+    {
+        Write-Host -ForegroundColor Red "`tFailed to re-register with DSC!"
+        Write-Host -ForegroundColor Red "`tError details: $($Error[0].Exception)"
+    } # catch
+
+Write-Verbose 'DONE!'
 
 # The below is to give some breathing space for config to be properly pulled down from Automation DSC
-Start-Sleep -Seconds 30
+#Start-Sleep -Seconds 30
