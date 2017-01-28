@@ -49,7 +49,7 @@ Switch ($PSVersionTable.PSVersion.Major)
         #$ConfigurationNames = ($ConfigurationNames.Split(',')).Trim()
 
          Invoke-WebRequest https://raw.githubusercontent.com/justeat/PowerShellDSCUtils/master/Version5DSC.ps1 -OutFile "$PSScriptRoot\DSC\Version5DSC.ps1"
-        . $PSScriptRoot\DSC\Version5DSC.ps1 -ConfigurationNames $ConfigurationNames -PullServerUrl $PullServerURL -PullServerRegKey $PullServerRegKey -Verbose | Tee-Object -FilePath "$PSScriptRoot\DSC\Onboarding.log"
+        . $PSScriptRoot\DSC\Version5DSC.ps1 -ConfigurationNames $ConfigurationNames -PullServerUrl $PullServerURL -PullServerRegKey $PullServerRegKey -Verbose | Tee-Object -FilePath "$PSScriptRoot\DSC\Version5DSC.log"
     } # PoSh 5
 
     4 

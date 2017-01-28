@@ -98,6 +98,24 @@ Write-Verbose 'Applying SetupLCM DSC Configuration to self...'
 Write-Verbose 'DONE!'
 Write-Verbose ''
 Write-Verbose 'Waiting for the initial DSC registration to complete...'
+Write-Verbose ''
+    Write-Verbose "`tInitializing 'Microsoft-Windows-DSC/Operational' EventLog for this PoSh session..."
+
+        try
+        {
+            New-EventLog -LogName 'Microsoft-Windows-DSC/Operational' -Source 'Desired State Configuration' -ErrorAction Stop
+        } # try
+
+        catch
+        {
+            Write-Host -ForegroundColor Red "`tFailed to initialize 'Microsoft-Windows-DSC/Operational' EventLog!"
+            Write-Host -ForegroundColor Red "`tError details: $($Error[0].Exception)"
+            Write-Host -ForegroundColor Red "`tABORTING!"
+            break
+        } # catch
+
+    Write-Verbose "`tDONE!"
+Write-Verbose ''
 
     do
     {
