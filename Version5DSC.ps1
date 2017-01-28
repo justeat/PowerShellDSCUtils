@@ -97,6 +97,25 @@ Write-Verbose 'Applying SetupLCM DSC Configuration to self...'
 
 Write-Verbose 'DONE!'
 Write-Verbose ''
+Write-Verbose 'Creating ReRegisterLCM scheduled task...'
+
+    $Command = 'Set-DscLocalConfigurationManager -Path C:\cfn\DSC\SetupLCM\ -Force'
+    $Arguments = "/CREATE /RU `"system`" /SC ONEVENT /TN `"TEST2`" /TR `"powershell -command {$Command}`" /F /RL HIGHEST /EC `"Microsoft-Windows-DSC/Operational`" /MO `"*[System[Provider[@Name='Microsoft-Windows-DSC'] and EventID=4260]]`""
+
+    try
+    {
+        Start-Process -FilePath 'schtasks' -ArgumentList $Arguments -Wait -ErrorAction Stop
+    } # try
+
+    catch
+    {
+        Write-Host -ForegroundColor Red "`tFailed to create ReRegisterLCM scheduled task!"
+        Write-Host -ForegroundColor Red "`tError details: $($Error[0].Exception)"
+    } # catch
+
+Write-Verbose 'DONE!'
+
+<#
 Write-Verbose 'Waiting for the initial DSC registration and config apply to complete...'
 Write-Verbose ''
     Write-Verbose "`tInitializing 'Microsoft-Windows-DSC/Operational' EventLog for this PoSh session..."
@@ -165,6 +184,7 @@ Write-Verbose 'Re-registering with DSC to ensure proper workflow from now on...'
         Write-Verbose ''
     } # if
     #>
+    <#
     try
     {
         Set-DSCLocalConfigurationManager –Path .\SetupLCM -Force –Verbose -ErrorAction Stop
@@ -175,8 +195,8 @@ Write-Verbose 'Re-registering with DSC to ensure proper workflow from now on...'
         Write-Host -ForegroundColor Red "`tFailed to re-register with DSC!"
         Write-Host -ForegroundColor Red "`tError details: $($Error[0].Exception)"
     } # catch
-
-Write-Verbose 'DONE!'
+#>
+#Write-Verbose 'DONE!'
 
 # The below is to give some breathing space for config to be properly pulled down from Automation DSC
 #Start-Sleep -Seconds 30
