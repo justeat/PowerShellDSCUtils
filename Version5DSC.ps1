@@ -97,7 +97,7 @@ Write-Verbose 'Applying SetupLCM DSC Configuration to self...'
 
 Write-Verbose 'DONE!'
 Write-Verbose ''
-Write-Verbose 'Waiting for the initial DSC registration to complete...'
+Write-Verbose 'Waiting for the initial DSC registration and config apply to complete...'
 Write-Verbose ''
     Write-Verbose "`tInitializing 'Microsoft-Windows-DSC/Operational' EventLog for this PoSh session..."
 
@@ -116,6 +116,18 @@ Write-Verbose ''
 
     Write-Verbose "`tDONE!"
 Write-Verbose ''
+
+    do
+    {
+        Start-Sleep -Seconds 1
+    } # do
+
+    while
+    (
+        [bool]!(Get-EventLog -LogName 'Microsoft-Windows-DSC/Operational' -InstanceId 1 -Message *complete* -Newest 1)
+    ) # while
+
+    $CurrentTime = $(Get-EventLog -LogName 'Microsoft-Windows-DSC/Operational' -InstanceId 1 -Message *complete* -Newest 1).TimeWritten
 
     do
     {
