@@ -18,36 +18,39 @@ Write-Verbose 'Constructing SetupLCM DSC Configuration object...'
     [DscLocalConfigurationManager()]
     Configuration SetupLCM 
     {
-        Settings 
+        Node $env:COMPUTERNAME
         {
-            ActionAfterReboot              = 'ContinueConfiguration'
-            AllowModuleOverwrite           = $True
-            ConfigurationMode              = 'ApplyAndAutoCorrect'
-            ConfigurationModeFrequencyMins = 15
-            RebootNodeIfNeeded             = $True
-            RefreshFrequencyMins           = 30 
-            RefreshMode                    = 'PULL'
-        } # Settings
+            Settings 
+            {
+                ActionAfterReboot              = 'ContinueConfiguration'
+                AllowModuleOverwrite           = $True
+                ConfigurationMode              = 'ApplyAndAutoCorrect'
+                ConfigurationModeFrequencyMins = 15
+                RebootNodeIfNeeded             = $True
+                RefreshFrequencyMins           = 30 
+                RefreshMode                    = 'PULL'
+            } # Settings
 
-        ConfigurationRepositoryWeb AzureAutomationDSCPullServer
-        {
-            ConfigurationNames = $ConfigurationNames
-            RegistrationKey    = $PullServerRegKey
-            ServerUrl          = $PullServerURL 
-        } # AzureAutomationDSCPullServer
+            ConfigurationRepositoryWeb AzureAutomationDSC
+            {
+                ConfigurationNames = $ConfigurationNames
+                RegistrationKey    = $PullServerRegKey
+                ServerUrl          = $PullServerURL 
+            } # Azure Automatio nDSC Pull Server
 
-        ResourceRepositoryWeb AzureAutomationDSCRepository
-        {
-            RegistrationKey = $PullServerRegKey
-            ServerUrl       = $PullServerURL
-        } # AzureAutomationDSCReportServer
+            ResourceRepositoryWeb AzureAutomationDSC
+            {
+                RegistrationKey = $PullServerRegKey
+                ServerUrl       = $PullServerURL
+            } # Azure Automation DSC Respository
 
-        ReportServerWeb AzureAutomationDSCReportServer
-        {
-            RegistrationKey = $PullServerRegKey
-            ServerUrl       = $PullServerURL
+            ReportServerWeb AzureAutomationDSC
+            {
+                RegistrationKey = $PullServerRegKey
+                ServerUrl       = $PullServerURL
              
-        }
+            } # Azure Automation DSC Report Server
+        } # Node
     } # Configuration SetupLCM
 
 Write-Verbose 'DONE!'
