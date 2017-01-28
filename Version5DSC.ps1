@@ -79,7 +79,7 @@ Write-Verbose 'Applying SetupLCM DSC Configuration to self...'
 
     if ($PSCmdlet.ShouldProcess('SetupLCM DSC Configuration', 'Applying'))
     {
-        $CurrentTime = Get-Date
+        #$CurrentTime = Get-Date
         
         try
         {
@@ -100,7 +100,7 @@ Write-Verbose ''
 Write-Verbose 'Creating ReRegisterLCM scheduled task...'
 
     $Command = 'Set-DscLocalConfigurationManager -Path C:\cfn\DSC\SetupLCM\ -Force'
-    $Arguments = "/CREATE /RU `"system`" /SC ONEVENT /TN `"TEST2`" /TR `"powershell -command {$Command}`" /F /RL HIGHEST /EC `"Microsoft-Windows-DSC/Operational`" /MO `"*[System[Provider[@Name='Microsoft-Windows-DSC'] and EventID=4260]]`""
+    $Arguments = "/CREATE /RU `"system`" /SC ONEVENT /TN `"ReRegisterLCM`" /TR `"powershell -command `"& {$Command}`"`" /F /RL HIGHEST /EC `"Microsoft-Windows-DSC/Operational`" /MO `"*[System[Provider[@Name='Microsoft-Windows-DSC'] and EventID=4260]]`""
 
     try
     {
