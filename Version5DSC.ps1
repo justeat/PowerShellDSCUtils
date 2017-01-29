@@ -75,6 +75,22 @@ Write-Verbose 'Executing SetupLCM DSC Configuration object...'
 
 Write-Verbose 'DONE!'
 Write-Verbose ''
+Write-Verbose 'Setting culture to en-GB for proper date format...'
+
+    try
+    {
+        Set-WinSystemLocale -SystemLocale en-GB -ErrorAction Stop
+        Set-Culture -CultureInfo en-GB -ErrorAction Stop
+    } # try
+
+    catch
+    {
+        Write-Host -ForegroundColor Red "`tFailed to set culture to en-GB!"
+        Write-Host -ForegroundColor Red "`tError details: $($Error[0].Exception)"
+    } # catch
+
+Write-Verbose 'DONE!'
+Write-Verbose ''
 Write-Verbose 'Applying SetupLCM DSC Configuration to self...'
 
     if ($PSCmdlet.ShouldProcess('SetupLCM DSC Configuration', 'Applying'))
@@ -102,7 +118,8 @@ schtasks /CREATE /RU "SYSTEM" /SC ONEVENT /TN "ReRegisterLCM" /TR "C:\cfn\DSC\Re
 "@
     try
     {
-        Set-Content -Path C:\cfn\DSC\ReRegisterLCM.bat -Value "powershell -command `"& {Stop-DscConfiguration -Force; `$Stages = 'Current', 'Previous', 'Pending'; foreach (`$Stage in `$Stages) {Remove-DscConfigurationDocument -Stage `$Stage -Force}; Set-DscLocalConfigurationManager -Path C:\cfn\DSC\SetupLCM\ -Force}`"" -Force -ErrorAction Stop
+        #Set-Content -Path C:\cfn\DSC\ReRegisterLCM.bat -Value "powershell -command `"& {Stop-DscConfiguration -Force; `$Stages = 'Current', 'Previous', 'Pending'; foreach (`$Stage in `$Stages) {Remove-DscConfigurationDocument -Stage `$Stage -Force}; Set-DscLocalConfigurationManager -Path C:\cfn\DSC\SetupLCM\ -Force}`"" -Force -ErrorAction Stop
+        Set-Content -Path C:\cfn\DSC\ReRegisterLCM.bat -Value 'powershell -command "& {Set-DscLocalConfigurationManager -Path C:\cfn\DSC\SetupLCM\ -Force}"' -Force -ErrorAction Stop
     } # try
 
     catch
