@@ -27,7 +27,7 @@ Write-Verbose 'Constructing SetupLCM DSC Configuration object...'
                 ConfigurationMode              = 'ApplyAndAutoCorrect'
                 ConfigurationModeFrequencyMins = 30
                 RebootNodeIfNeeded             = $True
-                RefreshFrequencyMins           = 30 
+                RefreshFrequencyMins           = 15 
                 RefreshMode                    = 'PULL'
             } # Settings
 
@@ -79,8 +79,6 @@ Write-Verbose 'Applying SetupLCM DSC Configuration to self...'
 
     if ($PSCmdlet.ShouldProcess('SetupLCM DSC Configuration', 'Applying'))
     {
-        #$CurrentTime = Get-Date
-        
         try
         {
             Set-DSCLocalConfigurationManager –Path .\SetupLCM –Verbose -ErrorAction Stop
@@ -125,21 +123,7 @@ schtasks /CREATE /RU "SYSTEM" /SC ONEVENT /TN "ReRegisterLCM" /TR "C:\cfn\DSC\Re
         Write-Host -ForegroundColor Red "`tFailed to create ReRegisterLCM scheduled task!"
         Write-Host -ForegroundColor Red "`tError details: $($Error[0].Exception)"
     } # catch
-<#
-    $Command = 'Set-DscLocalConfigurationManager -Path C:\cfn\DSC\SetupLCM\ -Force'
-    $Arguments = "/CREATE /RU `"system`" /SC ONEVENT /TN `"ReRegisterLCM`" /TR `"powershell -command `"& {$Command}`"`" /F /RL HIGHEST /EC `"Microsoft-Windows-DSC/Operational`" /MO `"*[System[Provider[@Name='Microsoft-Windows-DSC'] and EventID=4260]]`""
 
-    try
-    {
-        Start-Process -FilePath 'schtasks' -ArgumentList $Arguments -Wait -ErrorAction Stop
-    } # try
-
-    catch
-    {
-        Write-Host -ForegroundColor Red "`tFailed to create ReRegisterLCM scheduled task!"
-        Write-Host -ForegroundColor Red "`tError details: $($Error[0].Exception)"
-    } # catch
-    #>
 Write-Verbose 'DONE!'
 
 <#
