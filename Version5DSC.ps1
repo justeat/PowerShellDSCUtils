@@ -99,6 +99,33 @@ Write-Verbose 'DONE!'
 Write-Verbose ''
 Write-Verbose 'Creating ReRegisterLCM scheduled task...'
 
+    $Command = @"
+schtasks /CREATE /RU "SYSTEM" /SC ONEVENT /TN "ReRegisterLCM" /TR "C:\cfn\DSC\ReRegisterLCM.bat" /F /RL HIGHEST /EC "Microsoft-Windows-DSC/Operational" /MO "*[System[Provider[@Name='Microsoft-Windows-DSC'] and EventID=4260]]"
+"@
+    try
+    {
+        Set-Content -Path C:\cfn\DSC\ReRegisterLCM.bat -Value 'powershell -command "& {Set-DscLocalConfigurationManager -Path C:\cfn\DSC\SetupLCM\ -Force}"' -Force -ErrorAction Stop
+    } # try
+
+    catch
+    {
+        Write-Host -ForegroundColor Red "`tFailed to create ReRegisterLCM scheduled task's script file!"
+        Write-Host -ForegroundColor Red "`tError details: $($Error[0].Exception)"
+        Write-Host -ForegroundColor Red "`tABORTING!"
+        break
+    } # catch
+
+    try
+    {
+        Invoke-Expression -Command $Command -ErrorAction Stop
+    } # try
+
+    catch
+    {
+        Write-Host -ForegroundColor Red "`tFailed to create ReRegisterLCM scheduled task!"
+        Write-Host -ForegroundColor Red "`tError details: $($Error[0].Exception)"
+    } # catch
+<#
     $Command = 'Set-DscLocalConfigurationManager -Path C:\cfn\DSC\SetupLCM\ -Force'
     $Arguments = "/CREATE /RU `"system`" /SC ONEVENT /TN `"ReRegisterLCM`" /TR `"powershell -command `"& {$Command}`"`" /F /RL HIGHEST /EC `"Microsoft-Windows-DSC/Operational`" /MO `"*[System[Provider[@Name='Microsoft-Windows-DSC'] and EventID=4260]]`""
 
@@ -112,7 +139,7 @@ Write-Verbose 'Creating ReRegisterLCM scheduled task...'
         Write-Host -ForegroundColor Red "`tFailed to create ReRegisterLCM scheduled task!"
         Write-Host -ForegroundColor Red "`tError details: $($Error[0].Exception)"
     } # catch
-
+    #>
 Write-Verbose 'DONE!'
 
 <#
