@@ -25,9 +25,9 @@ Write-Verbose 'Constructing SetupLCM DSC Configuration object...'
                 ActionAfterReboot              = 'ContinueConfiguration'
                 AllowModuleOverwrite           = $True
                 ConfigurationMode              = 'ApplyAndAutoCorrect'
-                ConfigurationModeFrequencyMins = 30
+                ConfigurationModeFrequencyMins = 15
                 RebootNodeIfNeeded             = $True
-                RefreshFrequencyMins           = 15 
+                RefreshFrequencyMins           = 30 
                 RefreshMode                    = 'PULL'
             } # Settings
 
