@@ -102,9 +102,7 @@ schtasks /CREATE /RU "SYSTEM" /SC ONEVENT /TN "ReRegisterLCM" /TR "C:\cfn\DSC\Re
 "@
     try
     {
-        #Set-Content -Path C:\cfn\DSC\ReRegisterLCM.bat -Value 'powershell -command "& {Set-DscLocalConfigurationManager -Path C:\cfn\DSC\SetupLCM\ -Force; Remove-DscConfigurationDocument -Stage Current -Force; Update-DscConfiguration -Wait}"' -Force -ErrorAction Stop
-        #Set-Content -Path C:\cfn\DSC\ReRegisterLCM.bat -Value 'powershell -command "& {Stop-DscConfiguration -Force; Remove-DscConfigurationDocument -Stage Current -Force; Set-DscLocalConfigurationManager -Path C:\cfn\DSC\SetupLCM\ -Force; Remove-DscConfigurationDocument -Stage Current -Force; Update-DscConfiguration -Wait}"' -Force -ErrorAction Stop    
-        Set-Content -Path C:\cfn\DSC\ReRegisterLCM.bat -Value 'powershell -command "& {Set-DscLocalConfigurationManager -Path C:\cfn\DSC\SetupLCM\ -Force; Start-Sleep -Seconds 600; Set-DscLocalConfigurationManager -Path C:\cfn\DSC\SetupLCM\ -Force}"' -Force -ErrorAction Stop
+        Set-Content -Path C:\cfn\DSC\ReRegisterLCM.bat -Value 'powershell -command "& {Set-DscLocalConfigurationManager -Path C:\cfn\DSC\SetupLCM\ -Force}"' -Force -ErrorAction Stop
     } # try
 
     catch
