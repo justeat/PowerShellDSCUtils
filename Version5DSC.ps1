@@ -1,8 +1,25 @@
-﻿[cmdletbinding(SupportsShouldProcess=$True)]
+﻿<#
+    NOTE FOR AZURE AUTOMATION DSC CLIENTS:
+
+    Partial Configs are NOT supported yet. Same should be true for Composite resources,
+    but actually isn't - they work as expected, due to this:
+
+    "(...) However, DSC composite resources can be imported and used in Azure Automation DSC Configurations like in local PowerShell, enabling configuration reuse."
+
+    SOURCE: https://docs.microsoft.com/en-us/azure/automation/automation-dsc-overview
+
+    Anyway, I've added the functionality (partial configs) for future use
+
+    Cheers,
+    Rad
+#>
+
+
+[cmdletbinding(SupportsShouldProcess=$True)]
 Param 
 (
     [Parameter(Mandatory=$True)]
-    [String]$ConfigurationNames,
+    [String[]]$ConfigurationNames,
     [Parameter(Mandatory=$True)]
     [String]$PullServerRegKey,
     [Parameter(Mandatory=$True)]
@@ -13,7 +30,7 @@ Set-Location -Path $PSScriptRoot
 
 Write-Verbose 'Constructing SetupLCM DSC Configuration object...'
 
-    $ConfigurationNames = $($ConfigurationNames.Split(',')).Trim()
+    #$ConfigurationNames = $($ConfigurationNames.Split(',')).Trim()
 
     [DscLocalConfigurationManager()]
     Configuration SetupLCM 
@@ -37,6 +54,18 @@ Write-Verbose 'Constructing SetupLCM DSC Configuration object...'
                 RegistrationKey    = $PullServerRegKey
                 ServerUrl          = $PullServerURL 
             } # Azure Automatio nDSC Pull Server
+
+            if ($ConfigurationNames.Count -gt 1)
+            {
+                foreach ($ConfigurationName in $ConfigurationNames)
+                {
+                    PartialConfiguration $ConfigurationName 
+                    {
+                        Description         = "$ConfigurationName"
+                        ConfigurationSource = @("[ConfigurationRepositoryWeb]AzureAutomationDSC") 
+                    } # Partial config
+                } # foreach
+            } # if
 
             ResourceRepositoryWeb AzureAutomationDSC
             {
